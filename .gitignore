@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+next-env.d.ts
+*.tsbuildinfo
+.DS_Store
+
+# Duplicado comprimido de la carpeta de frames (48 MB): no hace falta en el repositorio
+deadlock-assets/**/*.zip

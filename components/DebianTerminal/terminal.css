@@ -1,0 +1,273 @@
+/*
+ * Terminal Debian emulada con el aspecto de la ventana de GNOME Terminal que aparece en la
+ * pantalla del portátil (último frame de la secuencia). Colores y proporciones tomados de ese frame.
+ */
+
+.term {
+  --term-size: 13px;
+  --term-fg: #e8edf5;
+  --term-dim: #8d9bb0;
+  --term-green: #9cc48a;
+  /* Color principal (prompt, cursor, comandos): se cambia desde la paleta o con `theme`. */
+  --term-accent: var(--term-green);
+  --term-red: #d8665a;
+  --term-error: #ef6b61;
+  --term-blue: #7aa7ec;
+  --term-cursor: #d9dee6;
+  --term-font: "DejaVu Sans Mono", Menlo, "Cascadia Mono", Consolas, "Liberation Mono", "Ubuntu Mono", monospace;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--term-fg);
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  line-height: 1.22;
+  font-variant-ligatures: none;
+  /*
+   * Fondo de la ventana del frame, extraído sin el texto (ver app/sequences/laptop-opening/window.png).
+   * El degradado queda debajo por si la imagen no está disponible.
+   */
+  background:
+    url("/sequences/laptop-opening/window.png") center / 100% 100% no-repeat,
+    linear-gradient(to top right, #00194a 0%, #03173a 45%, #05132a 100%);
+  border: 1px solid rgba(150, 180, 225, 0.22);
+  border-radius: calc(var(--term-size) * 0.62);
+  box-shadow:
+    0 18px 50px -18px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+@media (width >= 48rem) {
+  .term {
+    --term-size: 14.5px;
+  }
+}
+@media (width >= 80rem) {
+  .term {
+    --term-size: 15.5px;
+  }
+}
+
+/* La terminal del portátil toma el tamaño de letra medido en el frame (llega por style). */
+.term.is-immersive {
+  --term-size: var(--term-immersive-size, 13.5px);
+  height: 100%;
+}
+
+.term:focus-within {
+  border-color: var(--term-focus, rgba(150, 190, 245, 0.4));
+}
+
+/* Barra de título de GNOME: icono, título centrado a la izquierda, controles de ventana. */
+.term-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.9em;
+  height: calc(var(--term-size) * 2.3);
+  padding-inline: 0.7em 0.55em;
+  background: #061224;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #f3f7fc;
+}
+
+.term-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: 0.84em;
+  letter-spacing: 0.005em;
+}
+
+.term-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.9em;
+  padding-right: 0.7em;
+  color: #e2eefc;
+}
+
+.term-icon,
+.term-controls svg {
+  flex-shrink: 0;
+  width: 1.25em;
+  height: 1.25em;
+}
+.term-controls svg {
+  width: 1em;
+  height: 1em;
+}
+
+/* Área desplazable: el scroll horizontal vive solo aquí dentro. */
+.term-viewport {
+  container-type: inline-size;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 0.5em 0.55em 0.7em;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(141, 160, 190, 0.35) transparent;
+  cursor: text;
+}
+
+.term-lines {
+  min-width: max-content;
+}
+
+/* neofetch necesita ~80 columnas: en terminales estrechas (móvil) solo se muestran los datos. */
+@container (max-width: 44em) {
+  .nf-logo {
+    display: none;
+  }
+}
+
+.term-line {
+  white-space: pre;
+  tab-size: 8;
+  min-height: 1.22em;
+  user-select: text;
+}
+
+.term-line.is-new {
+  animation: term-in 0.16s ease-out both;
+}
+
+@keyframes term-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Tonos (paleta de la terminal del frame). */
+.tone-default {
+  color: var(--term-fg);
+}
+.tone-muted {
+  color: var(--term-dim);
+}
+.tone-info {
+  color: var(--term-blue);
+}
+.tone-dir {
+  color: var(--term-blue);
+  font-weight: 700;
+}
+.tone-strong {
+  color: var(--term-fg);
+  font-weight: 700;
+}
+.tone-prompt {
+  color: var(--term-accent);
+  font-weight: 700;
+}
+.tone-accent {
+  color: var(--term-red);
+  font-weight: 700;
+}
+/* Coincidencias de grep --color=auto: rojo en negrita. */
+.tone-match {
+  color: #ef4a44;
+  font-weight: 700;
+}
+.tone-error,
+.tone-warn {
+  color: var(--term-error);
+}
+.tone-alert {
+  color: var(--term-error);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* Prompt de Debian como en el frame: usuario@host en verde y negrita, resto en claro. */
+.term-user {
+  color: var(--term-accent);
+  font-weight: 700;
+  transition: color 0.25s ease;
+}
+
+/* Colores de la paleta: botones del tamaño de tres caracteres. */
+.term-swatch {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  line-height: inherit;
+  color: transparent;
+  white-space: pre;
+  vertical-align: top;
+  cursor: pointer;
+  transition:
+    filter 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.term-swatch:hover {
+  filter: brightness(1.2);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+}
+.term-swatch:focus-visible {
+  outline: 2px solid var(--term-fg);
+  outline-offset: 1px;
+}
+.term-swatch.is-selected {
+  box-shadow: inset 0 0 0 2px var(--term-fg);
+}
+
+.term-cursor {
+  display: inline-block;
+  min-width: 0.6em;
+  background: var(--term-cursor);
+  color: #05132a;
+  animation: term-blink 1.1s steps(1, end) infinite;
+}
+.term-cursor.is-idle {
+  background: transparent;
+  color: inherit;
+  box-shadow: inset 0 0 0 1px var(--term-dim);
+  animation: none;
+}
+
+@keyframes term-blink {
+  50% {
+    background: transparent;
+    color: inherit;
+  }
+}
+
+.term-hint {
+  color: var(--term-dim);
+  font-family: var(--font-sans);
+  font-size: 0.82em;
+  padding-left: 1.2em;
+}
+
+/* Entrada real, invisible: captura teclado, pegado y teclado móvil (16px evita el zoom en iOS). */
+.term-hidden-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  font-size: 16px;
+  caret-color: transparent;
+  color: transparent;
+  background: transparent;
+  border: 0;
+  outline: none;
+  padding: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .term-line.is-new,
+  .term-cursor {
+    animation: none;
+  }
+}
+html[data-motion="reduced"] .term-line.is-new,
+html[data-motion="reduced"] .term-cursor {
+  animation: none;
+}

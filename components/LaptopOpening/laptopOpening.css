@@ -1,0 +1,54 @@
+/* Secuencia del portátil: sección alta + escena fija. */
+
+.laptop-scroll {
+  position: relative;
+  /* Duración fija: con más frames la animación gana fluidez, no longitud. */
+  height: 520vh;
+}
+
+.laptop-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* Zona útil bajo la barra de navegación: el portátil y la terminal nunca quedan debajo de ella. */
+.laptop-stage {
+  position: absolute;
+  inset: var(--nav-h) 0 0;
+}
+
+.laptop-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.laptop-terminal {
+  position: absolute;
+  inset: 0;
+  will-change: opacity;
+}
+/* Hasta que se mide el frame, la ventana ocupa el escenario con un margen. */
+.laptop-terminal > div {
+  position: absolute;
+  inset: 10px;
+}
+
+/* Movimiento reducido: sin secuencia. El escritorio final y la terminal, en una sola pantalla. */
+@media (prefers-reduced-motion: reduce) {
+  .laptop-scroll {
+    height: 100svh;
+  }
+  .laptop-sticky {
+    position: relative;
+  }
+}
+html[data-motion="reduced"] .laptop-scroll {
+  height: 100svh;
+}
+html[data-motion="reduced"] .laptop-sticky {
+  position: relative;
+}

@@ -1,0 +1,30 @@
+{
+  "name": "deadlock-06",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DEADLOCK / 06 — Micrositio interactivo sobre el problema de los filósofos comensales.",
+  "scripts": {
+    "dev": "next dev -H 127.0.0.1",
+    "dev:red": "next dev",
+    "build": "next build",
+    "start": "next start -H 127.0.0.1",
+    "start:red": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "framer-motion": "^13.4.4",
+    "lucide-react": "^1.48.0",
+    "next": "^16.3.6",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.6.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
+  }
+}
